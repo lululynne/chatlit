@@ -1,1 +1,311 @@
+<!DOCTYPE html>
 
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatLit - 对话文学平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#EC4899'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 min-h-screen">
+    <div id="app">
+        <!-- Header -->
+        <div class="bg-white/90 backdrop-blur-md px-4 py-3 shadow-lg border-b border-purple-100">
+            <div class="flex items-center justify-between max-w-7xl mx-auto">
+                <div class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    ChatLit
+                </div>
+                <div class="flex-1 max-w-md mx-4">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" placeholder="搜索你喜欢的故事..." 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-full focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 transition-all">
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 bg-yellow-100 px-4 py-2 rounded-full">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        <span class="font-medium text-yellow-800" id="userCoins">1250</span>
+                    </div>
+                    <button onclick="showRecharge()" class="bg-gray-100 text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-all">
+                        充值
+                    </button>
+                    <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-medium">
+                        M
+                    </div>
+                </div>
+            </div>
+        </div>
+
+```
+    <!-- Navigation -->
+    <div class="bg-gradient-to-r from-yellow-100 to-orange-100 px-4 py-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex space-x-8">
+                <button class="text-gray-800 font-semibold border-b-2 border-yellow-500 pb-2">主页</button>
+                <button class="text-gray-600 hover:text-gray-800 font-medium">分区</button>
+                <button class="text-gray-600 hover:text-gray-800 font-medium">阅读记录</button>
+                <button onclick="showRecharge()" class="text-gray-600 hover:text-gray-800 font-medium">充值</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="px-4 py-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-wrap gap-4 mb-10" id="categories">
+                <button onclick="selectCategory('全部')" class="category-btn bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg px-6 py-2 rounded-full text-sm font-medium transition-all">全部</button>
+                <button onclick="selectCategory('都市')" class="category-btn bg-white text-gray-700 hover:bg-purple-50 shadow-sm px-6 py-2 rounded-full text-sm font-medium transition-all">都市</button>
+                <button onclick="selectCategory('校园')" class="category-btn bg-white text-gray-700 hover:bg-purple-50 shadow-sm px-6 py-2 rounded-full text-sm font-medium transition-all">校园</button>
+                <button onclick="selectCategory('恋爱')" class="category-btn bg-white text-gray-700 hover:bg-purple-50 shadow-sm px-6 py-2 rounded-full text-sm font-medium transition-all">恋爱</button>
+                <button onclick="selectCategory('婚姻')" class="category-btn bg-white text-gray-700 hover:bg-purple-50 shadow-sm px-6 py-2 rounded-full text-sm font-medium transition-all">婚姻</button>
+                <button onclick="selectCategory('悬疑')" class="category-btn bg-white text-gray-700 hover:bg-purple-50 shadow-sm px-6 py-2 rounded-full text-sm font-medium transition-all">悬疑</button>
+            </div>
+
+            <!-- Stories Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="storiesGrid">
+                <!-- Stories will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 relative">
+        <button onclick="hidePayment()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <h3 class="text-2xl font-bold text-gray-800 mb-6">金币充值</h3>
+        <div class="space-y-4">
+            <div class="border-2 border-purple-200 rounded-xl p-4 cursor-pointer hover:border-purple-400 transition-all" onclick="purchase(600, 5.99)">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-600">600金币</div>
+                    <div class="text-lg font-bold text-gray-800">¥5.99</div>
+                </div>
+            </div>
+            <div class="border-4 border-purple-400 rounded-xl p-4 cursor-pointer relative" onclick="purchase(1400, 9.99)">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full text-sm font-bold">🔥 推荐</span>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-600">1400金币</div>
+                    <div class="text-sm text-green-600">送200金币</div>
+                    <div class="text-lg font-bold text-gray-800">¥9.99</div>
+                </div>
+            </div>
+            <div class="border-2 border-purple-200 rounded-xl p-4 cursor-pointer hover:border-purple-400 transition-all" onclick="purchase(4300, 24.99)">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-600">4300金币</div>
+                    <div class="text-sm text-green-600">送800金币</div>
+                    <div class="text-lg font-bold text-gray-800">¥24.99</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Story Modal -->
+<div id="storyModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+        <button onclick="hideStory()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <div id="storyContent">
+            <!-- Story content will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const stories = [
+        { id: 1, title: '恶役千金洛跑后被恶犬缠上', category: '都市', author: '糖醋小排骨', isNew: true, isHot: true, chapters: 156, likes: 28947, price: 10, freeChapters: 4 },
+        { id: 2, title: '嫌体重，可是妹宝是万人迷啊', category: '校园', author: '柠檬味汽水', isNew: true, isHot: false, chapters: 89, likes: 15623, price: 8, freeChapters: 3 },
+        { id: 3, title: '占有欲男友', category: '恋爱', author: '甜甜圈女孩', isNew: false, isHot: true, chapters: 234, likes: 45782, price: 12, freeChapters: 5 },
+        { id: 4, title: '老公被驯成狗了', category: '婚姻', author: '夜猫子写手', isNew: false, isHot: false, chapters: 178, likes: 32156, price: 15, freeChapters: 4 },
+        { id: 5, title: '做坏小狗就得配冷淡女', category: '都市', author: '月光小说家', isNew: false, isHot: false, chapters: 145, likes: 22341, price: 10, freeChapters: 3 },
+        { id: 6, title: '把鲨手当私生粉的漂亮宝宝', category: '悬疑', author: '推理小天才', isNew: false, isHot: true, chapters: 198, likes: 38462, price: 12, freeChapters: 4 }
+    ];
+
+    let userCoins = 1250;
+    let selectedCategory = '全部';
+    let favorites = new Set();
+
+    function updateCoins() {
+        document.getElementById('userCoins').textContent = userCoins;
+    }
+
+    function selectCategory(category) {
+        selectedCategory = category;
+        const buttons = document.querySelectorAll('.category-btn');
+        buttons.forEach(btn => {
+            btn.className = 'category-btn bg-white text-gray-700 hover:bg-purple-50 shadow-sm px-6 py-2 rounded-full text-sm font-medium transition-all';
+        });
+        event.target.className = 'category-btn bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg px-6 py-2 rounded-full text-sm font-medium transition-all';
+        renderStories();
+    }
+
+    function renderStories() {
+        const grid = document.getElementById('storiesGrid');
+        const filteredStories = selectedCategory === '全部' ? stories : stories.filter(s => s.category === selectedCategory);
+        
+        grid.innerHTML = filteredStories.map(story => `
+            <div class="bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-xl cursor-pointer transition-all hover:shadow-2xl group">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex gap-2">
+                        ${story.isNew ? '<span class="bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full font-medium">NEW</span>' : ''}
+                        ${story.isHot ? '<span class="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs px-3 py-1 rounded-full font-medium">🔥 HOT</span>' : ''}
+                    </div>
+                    <button onclick="toggleFavorite(${story.id})" class="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-6 h-6 text-red-500 ${favorites.has(story.id) ? 'fill-current' : 'fill-none'}" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="flex space-x-4 mb-4">
+                    <div class="w-20 h-28 bg-gradient-to-br from-purple-200 to-pink-200 rounded-lg flex items-center justify-center">
+                        <span class="text-purple-600 text-xs">封面</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">${story.title}</h3>
+                        <p class="text-sm text-gray-500 mb-1">作者: ${story.author}</p>
+                        <p class="text-sm text-gray-500 mb-2">${story.category} · ${story.chapters}章</p>
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            <span class="text-sm text-gray-500">${story.likes}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-green-600 font-medium">
+                        前${story.freeChapters}章免费
+                    </div>
+                    <button onclick="openStory(${story.id})" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:shadow-lg transition-all">
+                        开始阅读
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function toggleFavorite(storyId) {
+        if (favorites.has(storyId)) {
+            favorites.delete(storyId);
+        } else {
+            favorites.add(storyId);
+        }
+        renderStories();
+    }
+
+    function openStory(storyId) {
+        const story = stories.find(s => s.id === storyId);
+        const modal = document.getElementById('storyModal');
+        const content = document.getElementById('storyContent');
+        
+        content.innerHTML = `
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">${story.title}</h2>
+            
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-xl p-6 mb-6">
+                <div class="flex items-center justify-center space-x-4 mb-4">
+                    <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-yellow-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <span class="text-lg font-medium text-yellow-800">是否花费${story.price}金币解锁本章？</span>
+                </div>
+                <div class="text-center mb-4">
+                    <div class="text-yellow-700 mb-2">当前余额: ${userCoins}金币</div>
+                    <div class="text-sm text-yellow-600">解锁后: ${userCoins - story.price}金币</div>
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="unlockChapter(${story.price})" class="bg-gradient-to-r from-pink-500 to-red-500 text-white px-8 py-3 rounded-full font-medium hover:shadow-lg transition-all">
+                        确认解锁
+                    </button>
+                    <button onclick="hideStory()" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-full font-medium hover:bg-gray-400 transition-all">
+                        取消
+                    </button>
+                </div>
+            </div>
+            
+            ${userCoins < story.price ? `
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 rounded-xl p-8 text-center">
+                <div class="w-16 h-16 bg-red-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <p class="text-xl font-bold text-red-800 mb-4">余额不足，无法解锁</p>
+                <p class="text-red-600 mb-6">当前余额: ${userCoins}金币，需要: ${story.price}金币</p>
+                <button onclick="hideStory(); showRecharge();" class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg transition-all">
+                    立即充值
+                </button>
+            </div>
+            ` : ''}
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    function hideStory() {
+        document.getElementById('storyModal').classList.add('hidden');
+    }
+
+    function unlockChapter(price) {
+        if (userCoins >= price) {
+            userCoins -= price;
+            updateCoins();
+            alert('解锁成功！开始阅读吧～');
+            hideStory();
+        } else {
+            showRecharge();
+        }
+    }
+
+    function showRecharge() {
+        document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function hidePayment() {
+        document.getElementById('paymentModal').classList.add('hidden');
+    }
+
+    function purchase(coins, price) {
+        // 模拟支付成功
+        userCoins += coins;
+        updateCoins();
+        alert(`充值成功！获得${coins}金币`);
+        hidePayment();
+    }
+
+    // Initialize
+    renderStories();
+</script>
+```
+
+</body>
+</html>
